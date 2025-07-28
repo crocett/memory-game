@@ -63,6 +63,7 @@
 
 .gameboard{
     display: flex;
+    flex-direction: column;
 
     align-items: center;
     justify-content: center;
@@ -74,4 +75,19 @@
 .grid{
     display: grid;
     grid-template-columns: repeat(8, 1fr);
+}
+
+.restart-button{
+    margin-top: 15vh;
+    height: 7vh;
+    width: 10vw;
+    background-color: rgb(222, 100, 202);
+    box-shadow: 5px 5px rgb(46, 31, 59);
+    border-radius: 10px;
+    border-style: none;
+}
+
+p{
+    font-weight:bolder;
+    color: rgb(73, 33, 57);
 }

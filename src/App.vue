@@ -10,7 +10,7 @@ import nunImg from '../src/assets/nun.png';
 import starImg from '../src/assets/star.png';
 import visionaryImg from '../src/assets/visionary.png';
 
-import { ref, onUnmounted } from 'vue';
+import { ref, onUnmounted, onMounted } from 'vue';
 
 const images =[
   jesterImg,
@@ -22,6 +22,8 @@ const images =[
   starImg,
   visionaryImg
 ]
+
+const restart = ref(false);
 
 const cardImages = ref(
   [...images, ...images]
@@ -59,6 +61,7 @@ const onCardFlip = (card) => {
               clearInterval(timeWaste.value);
               timeWaste.value = null;
               firstClick.value = false;
+              restart.value = true;
               alert(` Победа! Время: ${timer.value} секунд!`);
              },600) }
 
@@ -98,15 +101,52 @@ const checkWin = () => {
   return cardImages.value.every(card => card.isMatched);
 };
 
+onMounted(() => {
+  showAllCardsAtStart();
 
+});
+
+
+const showAllCardsAtStart = () => {
+  cardImages.value.forEach(card =>{
+    card.isRotate = true;
+  })
+
+  setTimeout(() => {
+    cardImages.value.forEach(card =>{
+      card.isRotate = false
+    })
+    }, 1500)
+
+};
+
+const resetGame = () => {
+ 
+  timer.value = 0;
+  timeWaste.value = null;
+  firstClick.value = false;
+  firstCard = null;
+  restart.value = false; 
+
+
+  cardImages.value = [...images, ...images]
+    .map((image, index) => ({
+      id: index,
+      image,
+      isRotate: false,
+      isMatched: false
+    }))
+    .sort(() => Math.random() - 0.5);
+
+    showAllCardsAtStart();
+
+};
 
 
 </script>
 
 <template>
-  <div class="timer">
 
-  </div>
   <div class="gameboard">
       <div class="grid">
          <TurnOverCard v-for = "card in cardImages"
@@ -120,6 +160,9 @@ const checkWin = () => {
         </TurnOverCard>
 
       </div>
+      <button class="restart-button" v-if="restart" @click="resetGame">
+        <p>НАЧАТЬ ЗАНОВО</p>
+      </button>
   </div>
 </template>
 
