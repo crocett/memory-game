@@ -24,6 +24,7 @@ const images =[
 ]
 
 const restart = ref(false);
+const finalTime = ref(0);
 
 const cardImages = ref(
   [...images, ...images]
@@ -59,10 +60,9 @@ const onCardFlip = (card) => {
             setTimeout
             (() =>{
               clearInterval(timeWaste.value);
-              timeWaste.value = null;
-              firstClick.value = false;
+              finalTime.value = timer.value;
               restart.value = true;
-              alert(` Победа! Время: ${timer.value} секунд!`);
+              console.log('finalTime.value =', finalTime.value);
              },600) }
 
       return
@@ -101,12 +101,6 @@ const checkWin = () => {
   return cardImages.value.every(card => card.isMatched);
 };
 
-onMounted(() => {
-  showAllCardsAtStart();
-
-});
-
-
 const showAllCardsAtStart = () => {
   cardImages.value.forEach(card =>{
     card.isRotate = true;
@@ -116,9 +110,14 @@ const showAllCardsAtStart = () => {
     cardImages.value.forEach(card =>{
       card.isRotate = false
     })
-    }, 1500)
+    }, 3000)
 
 };
+
+onMounted(() => {
+  showAllCardsAtStart();
+});
+
 
 const resetGame = () => {
  
@@ -127,6 +126,7 @@ const resetGame = () => {
   firstClick.value = false;
   firstCard = null;
   restart.value = false; 
+  console.log('finalTime.value =', finalTime.value);
 
 
   cardImages.value = [...images, ...images]
@@ -160,9 +160,13 @@ const resetGame = () => {
         </TurnOverCard>
 
       </div>
-      <button class="restart-button" v-if="restart" @click="resetGame">
-        <p>НАЧАТЬ ЗАНОВО</p>
-      </button>
+      <p style="color: red; font-weight: bold;">
+</p>
+
+      <div class="finish-screen" v-if="restart">
+        <p>Победа! Время: {{ finalTime}} секунд!</p>
+        <button class="restart-button" v-if="restart" @click="resetGame"><p>НАЧАТЬ ЗАНОВО</p></button>
+      </div>
   </div>
 </template>
 
